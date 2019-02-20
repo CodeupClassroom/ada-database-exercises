@@ -1,0 +1,14 @@
+USE numbers;
+
+SHOW TABLES;
+
+SELECT * FROM numbers;
+
+SELECT * FROM numbers
+LIMIT 3 OFFSET 0;
+
+SELECT * 
+FROM numbers
+WHERE n > 3
+ORDER BY n DESC
+LIMIT 4 OFFSET 3;
