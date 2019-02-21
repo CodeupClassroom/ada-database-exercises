@@ -1,66 +1,4 @@
-Welcome to the MySQL monitor.  Commands end with ; or \g.
-Your MySQL connection id is 19012
-Server version: 5.7.25-0ubuntu0.18.04.2-log (Ubuntu)
-
-Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
-
-Oracle is a registered trademark of Oracle Corporation and/or its
-affiliates. Other names may be trademarks of their respective
-owners.
-
-Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-
-mysql> show databases;
-+--------------------+
-| Database           |
-+--------------------+
-| information_schema |
-| ada_659            |
-| ada_661            |
-| ada_663            |
-| ada_664            |
-| ada_665            |
-| ada_667            |
-| ada_668            |
-| ada_669            |
-| ada_670            |
-| ada_671            |
-| ada_673            |
-| ada_674            |
-| ada_675            |
-| ada_677            |
-| ada_678            |
-| ada_679            |
-| ada_680            |
-| ada_683            |
-| ada_684            |
-| ada_685            |
-| albums_db          |
-| chipotle           |
-| elo_db             |
-| employees          |
-| fruits_db          |
-| iris_db            |
-| join_example_db    |
-| mall_customers     |
-| mysql              |
-| numbers            |
-| performance_schema |
-| quotes_db          |
-| sakila             |
-| svi_db             |
-| sys                |
-| telco_churn        |
-| titanic_db         |
-| tsa_item_demand    |
-| world              |
-| zillow             |
-+--------------------+
-41 rows in set (0.05 sec)
-
 mysql> use join_example_db;
-Reading table information for completion of table and column names
-You can turn off this feature to get a quicker startup with -A
 
 Database changed
 mysql> show tables;
@@ -134,6 +72,7 @@ mysql> show tables;
 2 rows in set (1.10 sec)
 
 mysql> use join_example_db;
+
 Database changed
 mysql> select * from users join roles on users.role_id = roles.id;
 +----+-------+-------------------+---------+----+----------+
@@ -351,8 +290,6 @@ mysql> SELECT u.name username, u.email user_email FROM users u JOIN roles r ON u
 4 rows in set (0.05 sec)
 
 mysql> use quotes_db;
-Reading table information for completion of table and column names
-You can turn off this feature to get a quicker startup with -A
 
 Database changed
 mysql> show tables;
@@ -483,4 +420,4 @@ mysql> SELECT q.content, t.name FROM quotes q JOIN quote_topic qt ON qt.quote_id
 +---------------------------------------------------------------------------+-------+
 3 rows in set (0.07 sec)
 
-mysql> 
+mysql>
