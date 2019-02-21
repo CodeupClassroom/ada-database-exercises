@@ -1,0 +1,354 @@
+mysql> USE numbers;
+
+Database changed
+mysql> SHOW TABLES;
++--------------------------+
+| Tables_in_numbers        |
++--------------------------+
+| numbers                  |
+| numbers_with_groups      |
+| numbers_with_more_groups |
++--------------------------+
+3 rows in set (1.84 sec)
+
+mysql> SELECT * FROM numbers_with_groups;
++----+----------+
+| n  | category |
++----+----------+
+|  1 | a        |
+|  2 | b        |
+|  3 | c        |
+|  4 | a        |
+|  5 | b        |
+|  6 | c        |
+|  7 | a        |
+|  8 | b        |
+|  9 | c        |
+| 10 | a        |
++----+----------+
+10 rows in set (0.05 sec)
+
+mysql> SELECT category FROM numbers_with_groups;
++----------+
+| category |
++----------+
+| a        |
+| b        |
+| c        |
+| a        |
+| b        |
+| c        |
+| a        |
+| b        |
+| c        |
+| a        |
++----------+
+10 rows in set (0.06 sec)
+
+mysql> SELECT category FROM numbers_with_groups GROUP BY category;
++----------+
+| category |
++----------+
+| a        |
+| b        |
+| c        |
++----------+
+3 rows in set (0.05 sec)
+
+mysql> SELECT * FROM numbers_with_groups GROUP BY category;
+ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'numbers.numbers_with_groups.n' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> SELECT  category, COUNT(n) FROM numbers_with_groups GROUP BY category;
++----------+----------+
+| category | COUNT(n) |
++----------+----------+
+| a        |        4 |
+| b        |        3 |
+| c        |        3 |
++----------+----------+
+3 rows in set (0.05 sec)
+
+mysql> SELECT  category, MAX(n) FROM numbers_with_groups GROUP BY category;
++----------+--------+
+| category | MAX(n) |
++----------+--------+
+| a        |     10 |
+| b        |      8 |
+| c        |      9 |
++----------+--------+
+3 rows in set (0.89 sec)
+
+mysql> SELECT  category, MIN(n), MAX(n) FROM numbers_with_groups GROUP BY category;
++----------+--------+--------+
+| category | MIN(n) | MAX(n) |
++----------+--------+--------+
+| a        |      1 |     10 |
+| b        |      2 |      8 |
+| c        |      3 |      9 |
++----------+--------+--------+
+3 rows in set (0.05 sec)
+
+mysql> SELECT  category, COUNT(n), MIN(n), MAX(n) FROM numbers_with_groups GROUP BY category;
++----------+----------+--------+--------+
+| category | COUNT(n) | MIN(n) | MAX(n) |
++----------+----------+--------+--------+
+| a        |        4 |      1 |     10 |
+| b        |        3 |      2 |      8 |
+| c        |        3 |      3 |      9 |
++----------+----------+--------+--------+
+3 rows in set (0.05 sec)
+
+mysql> SELECT  category, COUNT(n), MIN(n), MAX(n) FROM numbers_with_groups;
+ERROR 1140 (42000): In aggregated query without GROUP BY, expression #1 of SELECT list contains nonaggregated column 'numbers.numbers_with_groups.category'; this is incompatible with sql_mode=only_full_group_by
+mysql> SELECT COUNT(n), MIN(n), MAX(n) FROM numbers_with_groups;
++----------+--------+--------+
+| COUNT(n) | MIN(n) | MAX(n) |
++----------+--------+--------+
+|       10 |      1 |     10 |
++----------+--------+--------+
+1 row in set (0.05 sec)
+
+mysql> SELECT COUNT(n), MIN(n), MAX(n) FROM numbers_with_groups GROUP BY category;
++----------+--------+--------+
+| COUNT(n) | MIN(n) | MAX(n) |
++----------+--------+--------+
+|        4 |      1 |     10 |
+|        3 |      2 |      8 |
+|        3 |      3 |      9 |
++----------+--------+--------+
+3 rows in set (0.05 sec)
+
+mysql> SELECT category, COUNT(n), MIN(n), MAX(n) FROM numbers_with_groups GROUP BY category;
++----------+----------+--------+--------+
+| category | COUNT(n) | MIN(n) | MAX(n) |
++----------+----------+--------+--------+
+| a        |        4 |      1 |     10 |
+| b        |        3 |      2 |      8 |
+| c        |        3 |      3 |      9 |
++----------+----------+--------+--------+
+3 rows in set (0.04 sec)
+
+mysql> show tables;
++--------------------------+
+| Tables_in_numbers        |
++--------------------------+
+| numbers                  |
+| numbers_with_groups      |
+| numbers_with_more_groups |
++--------------------------+
+3 rows in set (0.05 sec)
+
+mysql> SELECT * FROM numbers_with_more_groups;
++----+----------+------------+
+| n  | category | supergroup |
++----+----------+------------+
+|  1 | a        | one        |
+|  2 | b        | two        |
+|  3 | c        | one        |
+|  4 | a        | two        |
+|  5 | b        | one        |
+|  6 | c        | two        |
+|  7 | a        | one        |
+|  8 | b        | two        |
+|  9 | c        | one        |
+| 10 | a        | two        |
++----+----------+------------+
+10 rows in set (0.05 sec)
+
+mysql> SELECT supergroup FROM numbers_with_more_groups GROUP BY supergroup;
++------------+
+| supergroup |
++------------+
+| one        |
+| two        |
++------------+
+2 rows in set (0.06 sec)
+
+mysql> SELECT supergroup, COUNT(*) FROM numbers_with_more_groups GROUP BY supergroup;
++------------+----------+
+| supergroup | COUNT(*) |
++------------+----------+
+| one        |        5 |
+| two        |        5 |
++------------+----------+
+2 rows in set (1.27 sec)
+
+mysql> SELECT supergroup, COUNT(*), MIN(n), MAX(n) FROM numbers_with_more_groups GROUP BY supergroup;
++------------+----------+--------+--------+
+| supergroup | COUNT(*) | MIN(n) | MAX(n) |
++------------+----------+--------+--------+
+| one        |        5 |      1 |      9 |
+| two        |        5 |      2 |     10 |
++------------+----------+--------+--------+
+2 rows in set (0.05 sec)
+
+mysql> SELECT supergroup, category, COUNT(*), MIN(n), MAX(n) FROM numbers_with_more_groups GROUP BY supergroup;
+ERROR 1055 (42000): Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'numbers.numbers_with_more_groups.category' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> SELECT supergroup, category, COUNT(*), MIN(n), MAX(n) FROM numbers_with_more_groups GROUP BY category;
+ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'numbers.numbers_with_more_groups.supergroup' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> SELECT category, COUNT(*), MIN(n), MAX(n) FROM numbers_with_more_groups GROUP BY category;
++----------+----------+--------+--------+
+| category | COUNT(*) | MIN(n) | MAX(n) |
++----------+----------+--------+--------+
+| a        |        4 |      1 |     10 |
+| b        |        3 |      2 |      8 |
+| c        |        3 |      3 |      9 |
++----------+----------+--------+--------+
+3 rows in set (0.05 sec)
+
+mysql> SELECT category, supergroup COUNT(*), MIN(n), MAX(n) FROM numbers_with_more_groups GROUP BY category, supergroup;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'COUNT(*), MIN(n), MAX(n) FROM numbers_with_more_groups GROUP BY category, superg' at line 1
+mysql> SELECT category, supergroup, COUNT(*), MIN(n), MAX(n) FROM numbers_with_more_groups GROUP BY category, supergroup;
++----------+------------+----------+--------+--------+
+| category | supergroup | COUNT(*) | MIN(n) | MAX(n) |
++----------+------------+----------+--------+--------+
+| a        | one        |        2 |      1 |      7 |
+| a        | two        |        2 |      4 |     10 |
+| b        | one        |        1 |      5 |      5 |
+| b        | two        |        2 |      2 |      8 |
+| c        | one        |        2 |      3 |      9 |
+| c        | two        |        1 |      6 |      6 |
++----------+------------+----------+--------+--------+
+6 rows in set (0.05 sec)
+
+mysql> SELECT category, supergroup, COUNT(*), MIN(n), MAX(n) FROM numbers_with_more_groups GROUP BY supergroup, group;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'group' at line 1
+mysql> SELECT category, supergroup, COUNT(*), MIN(n), MAX(n) FROM numbers_with_more_groups GROUP BY supergroup, category;
++----------+------------+----------+--------+--------+
+| category | supergroup | COUNT(*) | MIN(n) | MAX(n) |
++----------+------------+----------+--------+--------+
+| a        | one        |        2 |      1 |      7 |
+| b        | one        |        1 |      5 |      5 |
+| c        | one        |        2 |      3 |      9 |
+| a        | two        |        2 |      4 |     10 |
+| b        | two        |        2 |      2 |      8 |
+| c        | two        |        1 |      6 |      6 |
++----------+------------+----------+--------+--------+
+6 rows in set (0.06 sec)
+
+mysql> SELECT supergroup, category, COUNT(*), MIN(n), MAX(n) FROM numbers_with_more_groups GROUP BY supergroup, category;
++------------+----------+----------+--------+--------+
+| supergroup | category | COUNT(*) | MIN(n) | MAX(n) |
++------------+----------+----------+--------+--------+
+| one        | a        |        2 |      1 |      7 |
+| one        | b        |        1 |      5 |      5 |
+| one        | c        |        2 |      3 |      9 |
+| two        | a        |        2 |      4 |     10 |
+| two        | b        |        2 |      2 |      8 |
+| two        | c        |        1 |      6 |      6 |
++------------+----------+----------+--------+--------+
+6 rows in set (0.05 sec)
+
+mysql> SELECT supergroup AS sg, category, COUNT(*), MIN(n), MAX(n) FROM numbers_with_more_groups GROUP BY supergroup, category;
++------+----------+----------+--------+--------+
+| sg   | category | COUNT(*) | MIN(n) | MAX(n) |
++------+----------+----------+--------+--------+
+| one  | a        |        2 |      1 |      7 |
+| one  | b        |        1 |      5 |      5 |
+| one  | c        |        2 |      3 |      9 |
+| two  | a        |        2 |      4 |     10 |
+| two  | b        |        2 |      2 |      8 |
+| two  | c        |        1 |      6 |      6 |
++------+----------+----------+--------+--------+
+6 rows in set (1.01 sec)
+
+mysql> SELECT supergroup AS sg, category, COUNT(*), MIN(n), MAX(n) FROM numbers_with_more_groups GROUP BY sg, category;
++------+----------+----------+--------+--------+
+| sg   | category | COUNT(*) | MIN(n) | MAX(n) |
++------+----------+----------+--------+--------+
+| one  | a        |        2 |      1 |      7 |
+| one  | b        |        1 |      5 |      5 |
+| one  | c        |        2 |      3 |      9 |
+| two  | a        |        2 |      4 |     10 |
+| two  | b        |        2 |      2 |      8 |
+| two  | c        |        1 |      6 |      6 |
++------+----------+----------+--------+--------+
+6 rows in set (0.06 sec)
+
+mysql> SELECT supergroup AS sg, category, COUNT(*), MIN(n), MAX(n) FROM numbers_with_more_groups GROUP BY sg, category;
++------+----------+----------+--------+--------+
+| sg   | category | COUNT(*) | MIN(n) | MAX(n) |
++------+----------+----------+--------+--------+
+| one  | a        |        2 |      1 |      7 |
+| one  | b        |        1 |      5 |      5 |
+| one  | c        |        2 |      3 |      9 |
+| two  | a        |        2 |      4 |     10 |
+| two  | b        |        2 |      2 |      8 |
+| two  | c        |        1 |      6 |      6 |
++------+----------+----------+--------+--------+
+6 rows in set (0.06 sec)
+
+mysql> SELECT supergroup AS sg, category, COUNT(*), MIN(n), MAX(n) FROM numbers_with_more_groups GROUP BY supergroup, category;
++------+----------+----------+--------+--------+
+| sg   | category | COUNT(*) | MIN(n) | MAX(n) |
++------+----------+----------+--------+--------+
+| one  | a        |        2 |      1 |      7 |
+| one  | b        |        1 |      5 |      5 |
+| one  | c        |        2 |      3 |      9 |
+| two  | a        |        2 |      4 |     10 |
+| two  | b        |        2 |      2 |      8 |
+| two  | c        |        1 |      6 |      6 |
++------+----------+----------+--------+--------+
+6 rows in set (0.05 sec)
+
+mysql> SELECT COUNT(*) FROM numbers_with_more_groups;
++----------+
+| COUNT(*) |
++----------+
+|       10 |
++----------+
+1 row in set (0.05 sec)
+
+mysql> SELECT COUNT(*) FROM numbers_with_more_groups GROUP BY category;
++----------+
+| COUNT(*) |
++----------+
+|        4 |
+|        3 |
+|        3 |
++----------+
+3 rows in set (0.05 sec)
+
+mysql> SELECT COUNT(*) FROM numbers_with_more_groups GROUP BY category, supergroup;
++----------+
+| COUNT(*) |
++----------+
+|        2 |
+|        2 |
+|        1 |
+|        2 |
+|        2 |
+|        1 |
++----------+
+6 rows in set (0.05 sec)
+
+mysql> SELECT category, supergroup COUNT(*) FROM numbers_with_more_groups GROUP BY category, supergroup;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'COUNT(*) FROM numbers_with_more_groups GROUP BY category, supergroup' at line 1
+mysql> SELECT category, supergroup, COUNT(*) FROM numbers_with_more_groups GROUP BY category, supergroup;
++----------+------------+----------+
+| category | supergroup | COUNT(*) |
++----------+------------+----------+
+| a        | one        |        2 |
+| a        | two        |        2 |
+| b        | one        |        1 |
+| b        | two        |        2 |
+| c        | one        |        2 |
+| c        | two        |        1 |
++----------+------------+----------+
+6 rows in set (0.06 sec)
+
+mysql> SELECT *, COUNT(*) FROM numbers_with_more_groups GROUP BY category, supergroup;
+ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'numbers.numbers_with_more_groups.n' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> SELECT category, supergroup, COUNT(*) FROM numbers_with_more_groups GROUP BY category, supergroup;
++----------+------------+----------+
+| category | supergroup | COUNT(*) |
++----------+------------+----------+
+| a        | one        |        2 |
+| a        | two        |        2 |
+| b        | one        |        1 |
+| b        | two        |        2 |
+| c        | one        |        2 |
+| c        | two        |        1 |
++----------+------------+----------+
+6 rows in set (0.04 sec)
+
+mysql>
