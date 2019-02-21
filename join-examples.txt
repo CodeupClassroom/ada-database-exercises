@@ -1,0 +1,486 @@
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 19012
+Server version: 5.7.25-0ubuntu0.18.04.2-log (Ubuntu)
+
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| ada_659            |
+| ada_661            |
+| ada_663            |
+| ada_664            |
+| ada_665            |
+| ada_667            |
+| ada_668            |
+| ada_669            |
+| ada_670            |
+| ada_671            |
+| ada_673            |
+| ada_674            |
+| ada_675            |
+| ada_677            |
+| ada_678            |
+| ada_679            |
+| ada_680            |
+| ada_683            |
+| ada_684            |
+| ada_685            |
+| albums_db          |
+| chipotle           |
+| elo_db             |
+| employees          |
+| fruits_db          |
+| iris_db            |
+| join_example_db    |
+| mall_customers     |
+| mysql              |
+| numbers            |
+| performance_schema |
+| quotes_db          |
+| sakila             |
+| svi_db             |
+| sys                |
+| telco_churn        |
+| titanic_db         |
+| tsa_item_demand    |
+| world              |
+| zillow             |
++--------------------+
+41 rows in set (0.05 sec)
+
+mysql> use join_example_db;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++---------------------------+
+| Tables_in_join_example_db |
++---------------------------+
+| roles                     |
+| users                     |
++---------------------------+
+2 rows in set (0.05 sec)
+
+mysql> select * from roles;
++----+-----------+
+| id | name      |
++----+-----------+
+|  1 | admin     |
+|  2 | author    |
+|  3 | reviewer  |
+|  4 | commenter |
++----+-----------+
+4 rows in set (0.05 sec)
+
+mysql> select * from users;
++----+-------+-------------------+---------+
+| id | name  | email             | role_id |
++----+-------+-------------------+---------+
+|  1 | bob   | bob@example.com   |       1 |
+|  2 | joe   | joe@example.com   |       2 |
+|  3 | sally | sally@example.com |       3 |
+|  4 | adam  | adam@example.com  |       3 |
+|  5 | jane  | jane@example.com  |    NULL |
+|  6 | mike  | mike@example.com  |    NULL |
++----+-------+-------------------+---------+
+6 rows in set (1.06 sec)
+
+mysql> SELECT * FROM roles;
++----+-----------+
+| id | name      |
++----+-----------+
+|  1 | admin     |
+|  2 | author    |
+|  3 | reviewer  |
+|  4 | commenter |
++----+-----------+
+4 rows in set (0.05 sec)
+
+mysql> SELECT * FROM users;
++----+-------+-------------------+---------+
+| id | name  | email             | role_id |
++----+-------+-------------------+---------+
+|  1 | bob   | bob@example.com   |       1 |
+|  2 | joe   | joe@example.com   |       2 |
+|  3 | sally | sally@example.com |       3 |
+|  4 | adam  | adam@example.com  |       3 |
+|  5 | jane  | jane@example.com  |    NULL |
+|  6 | mike  | mike@example.com  |    NULL |
++----+-------+-------------------+---------+
+6 rows in set (0.05 sec)
+
+mysql> SELECT * FROM users JOIN roles users.role_id = roles.id;
+ERROR 1066 (42000): Not unique table/alias: 'users'
+mysql> SELECT users.id, users.name, users.email, users.role_id, roles.id, roles.name FROM users JOIN roles users.role_id = roles.id;
+ERROR 1066 (42000): Not unique table/alias: 'users'
+mysql> show tables;
++---------------------------+
+| Tables_in_join_example_db |
++---------------------------+
+| roles                     |
+| users                     |
++---------------------------+
+2 rows in set (1.10 sec)
+
+mysql> use join_example_db;
+Database changed
+mysql> select * from users join roles on users.role_id = roles.id;
++----+-------+-------------------+---------+----+----------+
+| id | name  | email             | role_id | id | name     |
++----+-------+-------------------+---------+----+----------+
+|  1 | bob   | bob@example.com   |       1 |  1 | admin    |
+|  2 | joe   | joe@example.com   |       2 |  2 | author   |
+|  3 | sally | sally@example.com |       3 |  3 | reviewer |
+|  4 | adam  | adam@example.com  |       3 |  3 | reviewer |
++----+-------+-------------------+---------+----+----------+
+4 rows in set (0.06 sec)
+
+mysql> SELECT * FROM users JOIN roles ON users.role_id = roles.id;
++----+-------+-------------------+---------+----+----------+
+| id | name  | email             | role_id | id | name     |
++----+-------+-------------------+---------+----+----------+
+|  1 | bob   | bob@example.com   |       1 |  1 | admin    |
+|  2 | joe   | joe@example.com   |       2 |  2 | author   |
+|  3 | sally | sally@example.com |       3 |  3 | reviewer |
+|  4 | adam  | adam@example.com  |       3 |  3 | reviewer |
++----+-------+-------------------+---------+----+----------+
+4 rows in set (0.05 sec)
+
+mysql> SELECT users.id, users.name, users.email, users.role_id, roles.id, roles.name FROM users JOIN roles ON users.role_id = roles.id;
++----+-------+-------------------+---------+----+----------+
+| id | name  | email             | role_id | id | name     |
++----+-------+-------------------+---------+----+----------+
+|  1 | bob   | bob@example.com   |       1 |  1 | admin    |
+|  2 | joe   | joe@example.com   |       2 |  2 | author   |
+|  3 | sally | sally@example.com |       3 |  3 | reviewer |
+|  4 | adam  | adam@example.com  |       3 |  3 | reviewer |
++----+-------+-------------------+---------+----+----------+
+4 rows in set (0.05 sec)
+
+mysql> SELECT * FROM users JOIN roles ON roles.id = users.role_id
+    -> ;
++----+-------+-------------------+---------+----+----------+
+| id | name  | email             | role_id | id | name     |
++----+-------+-------------------+---------+----+----------+
+|  1 | bob   | bob@example.com   |       1 |  1 | admin    |
+|  2 | joe   | joe@example.com   |       2 |  2 | author   |
+|  3 | sally | sally@example.com |       3 |  3 | reviewer |
+|  4 | adam  | adam@example.com  |       3 |  3 | reviewer |
++----+-------+-------------------+---------+----+----------+
+4 rows in set (0.05 sec)
+
+mysql> SELECT users.id, users.name, users.email, users.role_id, roles.id, roles.name FROM users JOIN roles ON users.role_id = roles.id;
++----+-------+-------------------+---------+----+----------+
+| id | name  | email             | role_id | id | name     |
++----+-------+-------------------+---------+----+----------+
+|  1 | bob   | bob@example.com   |       1 |  1 | admin    |
+|  2 | joe   | joe@example.com   |       2 |  2 | author   |
+|  3 | sally | sally@example.com |       3 |  3 | reviewer |
+|  4 | adam  | adam@example.com  |       3 |  3 | reviewer |
++----+-------+-------------------+---------+----+----------+
+4 rows in set (0.05 sec)
+
+mysql> SELECT users.name, users.email, roles.name FROM users JOIN roles ON users.role_id = roles.id;
++-------+-------------------+----------+
+| name  | email             | name     |
++-------+-------------------+----------+
+| bob   | bob@example.com   | admin    |
+| joe   | joe@example.com   | author   |
+| sally | sally@example.com | reviewer |
+| adam  | adam@example.com  | reviewer |
++-------+-------------------+----------+
+4 rows in set (0.05 sec)
+
+mysql> select * from users;
++----+-------+-------------------+---------+
+| id | name  | email             | role_id |
++----+-------+-------------------+---------+
+|  1 | bob   | bob@example.com   |       1 |
+|  2 | joe   | joe@example.com   |       2 |
+|  3 | sally | sally@example.com |       3 |
+|  4 | adam  | adam@example.com  |       3 |
+|  5 | jane  | jane@example.com  |    NULL |
+|  6 | mike  | mike@example.com  |    NULL |
++----+-------+-------------------+---------+
+6 rows in set (0.07 sec)
+
+mysql> SELECT users.name, users.email, roles.name FROM users JOIN roles ON users.role_id = roles.id;
++-------+-------------------+----------+
+| name  | email             | name     |
++-------+-------------------+----------+
+| bob   | bob@example.com   | admin    |
+| joe   | joe@example.com   | author   |
+| sally | sally@example.com | reviewer |
+| adam  | adam@example.com  | reviewer |
++-------+-------------------+----------+
+4 rows in set (0.05 sec)
+
+mysql> select * from users;
++----+-------+-------------------+---------+
+| id | name  | email             | role_id |
++----+-------+-------------------+---------+
+|  1 | bob   | bob@example.com   |       1 |
+|  2 | joe   | joe@example.com   |       2 |
+|  3 | sally | sally@example.com |       3 |
+|  4 | adam  | adam@example.com  |       3 |
+|  5 | jane  | jane@example.com  |    NULL |
+|  6 | mike  | mike@example.com  |    NULL |
++----+-------+-------------------+---------+
+6 rows in set (0.05 sec)
+
+mysql> SELECT users.name, users.email, roles.name FROM users JOIN roles ON users.role_id = roles.id;
++-------+-------------------+----------+
+| name  | email             | name     |
++-------+-------------------+----------+
+| bob   | bob@example.com   | admin    |
+| joe   | joe@example.com   | author   |
+| sally | sally@example.com | reviewer |
+| adam  | adam@example.com  | reviewer |
++-------+-------------------+----------+
+4 rows in set (0.05 sec)
+
+mysql> SELECT * FROM users;
++----+-------+-------------------+---------+
+| id | name  | email             | role_id |
++----+-------+-------------------+---------+
+|  1 | bob   | bob@example.com   |       1 |
+|  2 | joe   | joe@example.com   |       2 |
+|  3 | sally | sally@example.com |       3 |
+|  4 | adam  | adam@example.com  |       3 |
+|  5 | jane  | jane@example.com  |    NULL |
+|  6 | mike  | mike@example.com  |    NULL |
++----+-------+-------------------+---------+
+6 rows in set (0.05 sec)
+
+mysql> SELECT * FROM users LEFT JOIN roles ON roles.id = users.role_id
+    -> ;
++----+-------+-------------------+---------+------+----------+
+| id | name  | email             | role_id | id   | name     |
++----+-------+-------------------+---------+------+----------+
+|  1 | bob   | bob@example.com   |       1 |    1 | admin    |
+|  2 | joe   | joe@example.com   |       2 |    2 | author   |
+|  3 | sally | sally@example.com |       3 |    3 | reviewer |
+|  4 | adam  | adam@example.com  |       3 |    3 | reviewer |
+|  5 | jane  | jane@example.com  |    NULL | NULL | NULL     |
+|  6 | mike  | mike@example.com  |    NULL | NULL | NULL     |
++----+-------+-------------------+---------+------+----------+
+6 rows in set (0.05 sec)
+
+mysql> SELECT * FROM roles LEFT JOIN users ON roles.id = users.role_id;
++----+-----------+------+-------+-------------------+---------+
+| id | name      | id   | name  | email             | role_id |
++----+-----------+------+-------+-------------------+---------+
+|  1 | admin     |    1 | bob   | bob@example.com   |       1 |
+|  2 | author    |    2 | joe   | joe@example.com   |       2 |
+|  3 | reviewer  |    3 | sally | sally@example.com |       3 |
+|  3 | reviewer  |    4 | adam  | adam@example.com  |       3 |
+|  4 | commenter | NULL | NULL  | NULL              |    NULL |
++----+-----------+------+-------+-------------------+---------+
+5 rows in set (0.92 sec)
+
+mysql> SELECT * FROM roles RIGHT JOIN users ON roles.id = users.role_id;
++------+----------+----+-------+-------------------+---------+
+| id   | name     | id | name  | email             | role_id |
++------+----------+----+-------+-------------------+---------+
+|    1 | admin    |  1 | bob   | bob@example.com   |       1 |
+|    2 | author   |  2 | joe   | joe@example.com   |       2 |
+|    3 | reviewer |  3 | sally | sally@example.com |       3 |
+|    3 | reviewer |  4 | adam  | adam@example.com  |       3 |
+| NULL | NULL     |  5 | jane  | jane@example.com  |    NULL |
+| NULL | NULL     |  6 | mike  | mike@example.com  |    NULL |
++------+----------+----+-------+-------------------+---------+
+6 rows in set (0.05 sec)
+
+mysql> SELECT users.name, roles.name FROM roles RIGHT JOIN users ON roles.id = users.role_id;
++-------+----------+
+| name  | name     |
++-------+----------+
+| bob   | admin    |
+| joe   | author   |
+| sally | reviewer |
+| adam  | reviewer |
+| jane  | NULL     |
+| mike  | NULL     |
++-------+----------+
+6 rows in set (0.05 sec)
+
+mysql> SELECT users.name AS user_name, roles.name AS role_name FROM roles RIGHT JOIN users ON roles.id = users.role_id;
++-----------+-----------+
+| user_name | role_name |
++-----------+-----------+
+| bob       | admin     |
+| joe       | author    |
+| sally     | reviewer  |
+| adam      | reviewer  |
+| jane      | NULL      |
+| mike      | NULL      |
++-----------+-----------+
+6 rows in set (0.08 sec)
+
+mysql> SELECT * FROM users u JOIN roles r ON u.role_id = r.id;
++----+-------+-------------------+---------+----+----------+
+| id | name  | email             | role_id | id | name     |
++----+-------+-------------------+---------+----+----------+
+|  1 | bob   | bob@example.com   |       1 |  1 | admin    |
+|  2 | joe   | joe@example.com   |       2 |  2 | author   |
+|  3 | sally | sally@example.com |       3 |  3 | reviewer |
+|  4 | adam  | adam@example.com  |       3 |  3 | reviewer |
++----+-------+-------------------+---------+----+----------+
+4 rows in set (0.05 sec)
+
+mysql> SELECT u.name username, u.email user_email FROM users u JOIN roles r ON u.role_id = r.id;
++----------+-------------------+
+| username | user_email        |
++----------+-------------------+
+| bob      | bob@example.com   |
+| joe      | joe@example.com   |
+| sally    | sally@example.com |
+| adam     | adam@example.com  |
++----------+-------------------+
+4 rows in set (0.05 sec)
+
+mysql> use quotes_db;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++---------------------+
+| Tables_in_quotes_db |
++---------------------+
+| authors             |
+| quote_topic         |
+| quotes              |
+| topics              |
++---------------------+
+4 rows in set (0.05 sec)
+
+mysql> SELECT * FROM quotes;
++----+---------------------------------------------------------------------------+-----------+
+| id | content                                                                   | author_id |
++----+---------------------------------------------------------------------------+-----------+
+|  1 | I love deadlines, I love the whooshing noise they make as they go by.     |         1 |
+|  2 | Don't Panic                                                               |         1 |
+|  3 | Time is an illusion. Lunchtime doubly so.                                 |         1 |
+|  4 | Clothes make the man. Naked people have little or no influence on society |         2 |
+|  5 | The universe is a big place, perhaps the biggest                          |         3 |
++----+---------------------------------------------------------------------------+-----------+
+5 rows in set (0.04 sec)
+
+mysql> SELECT * FROM quotes q JOIN authors a ON q.author_id = a.id;
++----+---------------------------------------------------------------------------+-----------+----+------------+-----------+
+| id | content                                                                   | author_id | id | first_name | last_name |
++----+---------------------------------------------------------------------------+-----------+----+------------+-----------+
+|  1 | I love deadlines, I love the whooshing noise they make as they go by.     |         1 |  1 | Douglas    | Adams     |
+|  2 | Don't Panic                                                               |         1 |  1 | Douglas    | Adams     |
+|  3 | Time is an illusion. Lunchtime doubly so.                                 |         1 |  1 | Douglas    | Adams     |
+|  4 | Clothes make the man. Naked people have little or no influence on society |         2 |  2 | Mark       | Twain     |
+|  5 | The universe is a big place, perhaps the biggest                          |         3 |  3 | Kurt       | Vonnegut  |
++----+---------------------------------------------------------------------------+-----------+----+------------+-----------+
+5 rows in set (0.05 sec)
+
+mysql> SELECT * FROM quotes;
++----+---------------------------------------------------------------------------+-----------+
+| id | content                                                                   | author_id |
++----+---------------------------------------------------------------------------+-----------+
+|  1 | I love deadlines, I love the whooshing noise they make as they go by.     |         1 |
+|  2 | Don't Panic                                                               |         1 |
+|  3 | Time is an illusion. Lunchtime doubly so.                                 |         1 |
+|  4 | Clothes make the man. Naked people have little or no influence on society |         2 |
+|  5 | The universe is a big place, perhaps the biggest                          |         3 |
++----+---------------------------------------------------------------------------+-----------+
+5 rows in set (0.05 sec)
+
+mysql> SELECT * FROM topics;
++----+---------------------------------+
+| id | name                            |
++----+---------------------------------+
+|  1 | Space and Time                  |
+|  2 | Humor                           |
+|  3 | Office Life                     |
+|  4 | Hitchiker's Guide to the Galaxy |
++----+---------------------------------+
+4 rows in set (0.05 sec)
+
+mysql> SELECT * FROM quotes;
++----+---------------------------------------------------------------------------+-----------+
+| id | content                                                                   | author_id |
++----+---------------------------------------------------------------------------+-----------+
+|  1 | I love deadlines, I love the whooshing noise they make as they go by.     |         1 |
+|  2 | Don't Panic                                                               |         1 |
+|  3 | Time is an illusion. Lunchtime doubly so.                                 |         1 |
+|  4 | Clothes make the man. Naked people have little or no influence on society |         2 |
+|  5 | The universe is a big place, perhaps the biggest                          |         3 |
++----+---------------------------------------------------------------------------+-----------+
+5 rows in set (0.06 sec)
+
+mysql> SELECT * FROM quote_topic;
++----------+----------+
+| quote_id | topic_id |
++----------+----------+
+|        1 |        2 |
+|        1 |        3 |
+|        2 |        4 |
+|        3 |        1 |
+|        3 |        2 |
+|        3 |        3 |
+|        3 |        4 |
+|        4 |        2 |
+|        5 |        1 |
++----------+----------+
+9 rows in set (0.05 sec)
+
+mysql> SELECT * FROM quotes q JOIN quote_topic qt ON qt.quote_id = q.id;
++----+---------------------------------------------------------------------------+-----------+----------+----------+
+| id | content                                                                   | author_id | quote_id | topic_id |
++----+---------------------------------------------------------------------------+-----------+----------+----------+
+|  1 | I love deadlines, I love the whooshing noise they make as they go by.     |         1 |        1 |        2 |
+|  1 | I love deadlines, I love the whooshing noise they make as they go by.     |         1 |        1 |        3 |
+|  2 | Don't Panic                                                               |         1 |        2 |        4 |
+|  3 | Time is an illusion. Lunchtime doubly so.                                 |         1 |        3 |        1 |
+|  3 | Time is an illusion. Lunchtime doubly so.                                 |         1 |        3 |        2 |
+|  3 | Time is an illusion. Lunchtime doubly so.                                 |         1 |        3 |        3 |
+|  3 | Time is an illusion. Lunchtime doubly so.                                 |         1 |        3 |        4 |
+|  4 | Clothes make the man. Naked people have little or no influence on society |         2 |        4 |        2 |
+|  5 | The universe is a big place, perhaps the biggest                          |         3 |        5 |        1 |
++----+---------------------------------------------------------------------------+-----------+----------+----------+
+9 rows in set (0.04 sec)
+
+mysql> SELECT q.content, t.name FROM quotes q JOIN quote_topic qt ON qt.quote_id = q.id JOIN topics t ON qt.topic_id = t.id;
++---------------------------------------------------------------------------+---------------------------------+
+| content                                                                   | name                            |
++---------------------------------------------------------------------------+---------------------------------+
+| I love deadlines, I love the whooshing noise they make as they go by.     | Humor                           |
+| I love deadlines, I love the whooshing noise they make as they go by.     | Office Life                     |
+| Don't Panic                                                               | Hitchiker's Guide to the Galaxy |
+| Time is an illusion. Lunchtime doubly so.                                 | Space and Time                  |
+| Time is an illusion. Lunchtime doubly so.                                 | Humor                           |
+| Time is an illusion. Lunchtime doubly so.                                 | Office Life                     |
+| Time is an illusion. Lunchtime doubly so.                                 | Hitchiker's Guide to the Galaxy |
+| Clothes make the man. Naked people have little or no influence on society | Humor                           |
+| The universe is a big place, perhaps the biggest                          | Space and Time                  |
++---------------------------------------------------------------------------+---------------------------------+
+9 rows in set (0.05 sec)
+
+mysql> SELECT q.content, t.name FROM quotes q JOIN quote_topic qt ON qt.quote_id = q.id JOIN topics t ON qt.topic_id = t.id WHERE name = 'Humor';
++---------------------------------------------------------------------------+-------+
+| content                                                                   | name  |
++---------------------------------------------------------------------------+-------+
+| I love deadlines, I love the whooshing noise they make as they go by.     | Humor |
+| Time is an illusion. Lunchtime doubly so.                                 | Humor |
+| Clothes make the man. Naked people have little or no influence on society | Humor |
++---------------------------------------------------------------------------+-------+
+3 rows in set (0.07 sec)
+
+mysql> 
